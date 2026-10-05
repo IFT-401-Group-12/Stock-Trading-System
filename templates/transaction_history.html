@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Transaction History</h2>
+    <p>Follow the story of your portfolio, one move at a time. ✦</p>
+</section>
+
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Ticker</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>Oct 4, 2026</td>
+                <td><span class="transaction buy">Buy</span></td>
+                <td>AAPL</td>
+                <td>10</td>
+                <td>$187.42</td>
+                <td>$1,874.20</td>
+                <td><span class="status completed">Completed</span></td>
+            </tr>
+
+            <tr>
+                <td>Oct 2, 2026</td>
+                <td><span class="transaction deposit">Deposit</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>$2,500.00</td>
+                <td><span class="status completed">Completed</span></td>
+            </tr>
+
+            <tr>
+                <td>Sep 29, 2026</td>
+                <td><span class="transaction sell">Sell</span></td>
+                <td>NVDA</td>
+                <td>5</td>
+                <td>$118.11</td>
+                <td>$590.55</td>
+                <td><span class="status completed">Completed</span></td>
+            </tr>
+
+            <tr>
+                <td>Sep 27, 2026</td>
+                <td><span class="transaction withdrawal">Withdrawal</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>$300.00</td>
+                <td><span class="status completed">Completed</span></td>
+            </tr>
+
+            <tr>
+                <td>Sep 25, 2026</td>
+                <td><span class="transaction cancelled">Cancelled</span></td>
+                <td>AMZN</td>
+                <td>8</td>
+                <td>$151.94</td>
+                <td>$1,215.52</td>
+                <td><span class="status cancelled-status">Cancelled</span></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

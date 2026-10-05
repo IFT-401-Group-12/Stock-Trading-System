@@ -1,0 +1,547 @@
+/* ================================
+   ATHENA TRADING
+   Customer Interface
+   ================================ */
+
+
+/* Basic page setup */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #f2eafb 0%, transparent 32%),
+        radial-gradient(circle at bottom right, #fbecef 0%, transparent 30%),
+        #faf8fc;
+    color: #342f40;
+    min-height: 100vh;
+}
+
+
+/* Header and navigation */
+header {
+    background: linear-gradient(135deg, #31263f, #554166);
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(69, 51, 84, 0.15);
+}
+
+.brand h1 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+}
+
+nav a {
+    color: #f9f4fc;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #eee3f5;
+    color: #4a3659;
+    transform: translateY(-2px);
+}
+
+
+/* Main page area */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 45px 40px;
+}
+
+.page-heading {
+    margin-bottom: 30px;
+}
+
+.page-heading h2 {
+    margin: 0 0 8px;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: normal;
+    color: #453451;
+}
+
+.page-heading p {
+    margin: 0;
+    color: #81758a;
+}
+
+
+/* Dashboard cards */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: rgba(255, 253, 255, 0.92);
+    padding: 27px;
+    border-radius: 18px;
+    border: 1px solid #e8deec;
+    box-shadow: 0 8px 24px rgba(75, 55, 90, 0.07);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #d8c4e2;
+    box-shadow: 0 12px 30px rgba(75, 55, 90, 0.12);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #51405d;
+}
+
+.card .value {
+    margin: 12px 0;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    color: #8a668f;
+}
+
+.card p {
+    color: #756b7c;
+}
+
+.card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #8a668f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.card a:hover {
+    color: #4b3858;
+}
+
+
+/* Tables */
+.table-container {
+    background: rgba(255, 253, 255, 0.94);
+    border: 1px solid #e8deec;
+    border-radius: 16px;
+    overflow-x: auto;
+    box-shadow: 0 8px 24px rgba(75, 55, 90, 0.07);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee7f1;
+}
+
+th {
+    background-color: #f3edf7;
+    color: #574363;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+
+td {
+    color: #514b57;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #faf5fc;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Small screens */
+@media (max-width: 750px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+    }
+
+    main {
+        padding: 30px 20px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* Portfolio */
+.portfolio-section {
+    margin-top: 35px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-heading h3 {
+    margin: 0 0 5px;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: normal;
+    color: #51405d;
+}
+
+.section-heading p {
+    margin: 0;
+    color: #81758a;
+    font-size: 14px;
+}
+/* Transaction History */
+.transaction,
+.status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.transaction.buy {
+    background-color: #e8f3ed;
+    color: #547363;
+}
+
+.transaction.sell {
+    background-color: #eee8f5;
+    color: #725b84;
+}
+
+.transaction.deposit {
+    background-color: #f3eafa;
+    color: #75568a;
+}
+
+.transaction.withdrawal {
+    background-color: #faedf1;
+    color: #9a6173;
+}
+
+.transaction.cancelled {
+    background-color: #f3f0f4;
+    color: #756d79;
+}
+
+.status.completed {
+    background-color: #edf5ef;
+    color: #57725e;
+}
+
+.status.cancelled-status {
+    background-color: #f5edef;
+    color: #936473;
+}
+/* Market */
+.market-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 7px 13px;
+    background-color: #edf7f0;
+    color: #547363;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.market-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #6fa47f;
+    border-radius: 50%;
+}
+
+.stock-price {
+    font-weight: bold;
+    color: #624d70;
+}
+
+.stock-status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.stock-status.live {
+    background-color: #edf5ef;
+    color: #57725e;
+}
+/* ================================
+   ATHENA TRADING - LOGIN & SIGN UP
+   ================================ */
+
+.auth-container {
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    background: rgba(255, 253, 255, 0.95);
+    border: 1px solid #e8deec;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px rgba(75, 55, 90, 0.10);
+}
+
+/* Ethereal branding panel */
+.auth-brand {
+    position: relative;
+    padding: 55px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(232, 210, 244, 0.35), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(244, 207, 222, 0.25), transparent 35%),
+        linear-gradient(145deg, #342540, #665071 55%, #92758f);
+}
+
+.auth-brand::after {
+    content: "✦";
+    position: absolute;
+    right: 35px;
+    bottom: 65px;
+    font-size: 130px;
+    color: rgba(255, 255, 255, 0.05);
+}
+
+.auth-symbol {
+    margin: 0 0 20px;
+    font-size: 34px;
+    color: #ead8ef;
+}
+
+.auth-brand h2 {
+    margin: 0 0 16px;
+    font-family: Georgia, serif;
+    font-size: 42px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.auth-brand > div > p:last-child {
+    max-width: 310px;
+    color: #eee4f1;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.auth-footer {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+/* Form side */
+.auth-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px;
+}
+
+.auth-form-content {
+    width: 100%;
+    max-width: 480px;
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: #a17ba6;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+.auth-form h2 {
+    margin: 0 0 10px;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: normal;
+    color: #453451;
+}
+
+.form-description {
+    margin: 0 0 30px;
+    color: #81758a;
+}
+
+
+/* Form fields */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #51475a;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #ddd1e2;
+    border-radius: 10px;
+    background-color: #fdfbfe;
+    color: #342f40;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.form-group input:focus {
+    background-color: white;
+    border-color: #a982ad;
+    box-shadow: 0 0 0 3px rgba(169, 130, 173, 0.12);
+}
+
+.form-group input::placeholder {
+    color: #b1a7b5;
+}
+
+.name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+
+/* Main form button */
+.primary-button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #70567d, #95729b);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(112, 86, 125, 0.20);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(112, 86, 125, 0.28);
+}
+
+
+/* Login / signup switch */
+.auth-switch {
+    margin-top: 24px;
+    text-align: center;
+    color: #81758a;
+    font-size: 13px;
+}
+
+.auth-switch a {
+    color: #896492;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    color: #503b5c;
+}
+
+
+/* Authentication pages on smaller screens */
+@media (max-width: 850px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-brand {
+        min-height: 280px;
+        padding: 40px;
+    }
+
+    .auth-form {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .name-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+/* Login button in navigation */
+nav .login-nav-button {
+    margin-left: 8px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #eadcf0, #f4e5ed);
+    color: #4d3958;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 3px 10px rgba(32, 21, 39, 0.15);
+}
+
+nav .login-nav-button:hover {
+    background: white;
+    color: #4d3958;
+    transform: translateY(-2px);
+}
