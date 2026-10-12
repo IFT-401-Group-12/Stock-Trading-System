@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Sell Stock | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Trade</h2>
+    <p>Take profits, rebalance, or let something go. ✦</p>
+</section>
+
+<div class="trade-toolbar">
+    <div class="trade-tabs" role="tablist">
+        <a class="trade-tab" href="{{ url_for('buy') }}" role="tab" aria-selected="false">Buy</a>
+        <a class="trade-tab active sell" href="{{ url_for('sell') }}" role="tab" aria-selected="true">Sell</a>
+    </div>
+
+    <div class="market-status {{ '' if market_open else 'closed' }}">
+        <span class="market-dot"></span>
+        {{ market_message }}
+    </div>
+</div>
+
+{% if holdings %}
+
+<form class="trade-layout" method="post" action="{{ url_for('sell') }}"
+      data-trade-form data-side="sell" data-cash="{{ cash }}">
+
+    <section class="card trade-card">
+        <h3>Sell Stock</h3>
+
+        <div class="form-group">
+            <label for="stock_id">Stock you own</label>
+            <select id="stock_id" name="stock_id" required>
+                <option value="" disabled {{ 'selected' if not selected_id }}>Choose a stock</option>
+                {% for h in holdings %}
+                <option value="{{ h.stock_id }}"
+                        data-price="{{ h.current_price }}"
+                        data-owned="{{ h.quantity }}"
+                        data-avg="{{ h.avg_cost }}"
+                        {{ 'selected' if h.stock_id == selected_id }}
+                        {{ 'disabled' if h.status != 'live' }}>
+                    {{ h.ticker_symbol }} · {{ h.company_name }} ({{ '{:,}'.format(h.quantity) }} shares){{ ' · halted' if h.status != 'live' }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <span class="label">Order type</span>
+            <div class="segmented">
+                <label>
+                    <input type="radio" name="order_kind" value="market" checked>
+                    <span>Market</span>
+                </label>
+                <label>
+                    <input type="radio" name="order_kind" value="limit">
+                    <span>Limit</span>
+                </label>
+            </div>
+            <p class="hint" data-kind-hint="market">Sells right away at the current price.</p>
+            <p class="hint" data-kind-hint="limit" hidden>Sells automatically once the price rises to your limit or higher.</p>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="quantity">Quantity (shares)</label>
+                <input type="number" id="quantity" name="quantity" min="1" step="1"
+                       inputmode="numeric" placeholder="0" required>
+                <button type="button" class="text-button" data-sell-all>Sell all</button>
+            </div>
+
+            <div class="form-group" data-limit-field hidden>
+                <label for="limit_price">Limit price</label>
+                <input type="number" id="limit_price" name="limit_price" min="0.01" step="0.01"
+                       inputmode="decimal" placeholder="0.00">
+            </div>
+        </div>
+
+        <p class="form-error" data-form-error hidden></p>
+
+        <button type="submit" class="primary-button sell-button" {{ 'disabled' if not market_open }}>
+            {{ 'Place Sell Order' if market_open else 'Market Closed' }}
+        </button>
+    </section>
+
+    <aside class="card summary-card">
+        <h3>Order Summary</h3>
+
+        <dl class="summary-list">
+            <div><dt>Current price</dt><dd data-out="current">—</dd></div>
+            <div><dt>Shares owned</dt><dd data-out="owned">—</dd></div>
+            <div><dt>Avg. cost</dt><dd data-out="avg">—</dd></div>
+            <div><dt data-out="price-label">Price per share</dt><dd data-out="price">—</dd></div>
+            <div><dt>Quantity</dt><dd data-out="qty">0</dd></div>
+            <div class="summary-total"><dt>Estimated proceeds</dt><dd data-out="total">$0.00</dd></div>
+            <div><dt>Estimated gain / loss</dt><dd data-out="gain">—</dd></div>
+        </dl>
+
+        <dl class="summary-list cash-list">
+            <div><dt>Cash available</dt><dd>{{ cash | usd }}</dd></div>
+            <div><dt>Cash after order</dt><dd data-out="after">{{ cash | usd }}</dd></div>
+        </dl>
+
+        <p class="hint" data-kind-hint="limit" hidden>
+            These shares are set aside until the order fills or you cancel it.
+        </p>
+    </aside>
+
+</form>
+
+{% else %}
+
+<section class="card empty-card">
+    <h3>Nothing to sell yet</h3>
+    <p>You don't own any shares right now. Once you buy a stock, you can sell it from here.</p>
+    <a href="{{ url_for('buy') }}">Buy a stock</a>
+</section>
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/live_prices.js') }}"></script>
+<script src="{{ url_for('static', filename='js/trade_form.js') }}"></script>
+{% endblock %}
