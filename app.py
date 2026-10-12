@@ -63,7 +63,70 @@ def create_stock(ticker_symbol, company_name, initial_price, volume_available, c
     finally:
         cursor.close()
         connection.close()
-    
+        
+def get_transaction_history(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        sql = """
+            SELECT
+                t.transaction_id,
+                t.created_at,
+                t.transaction_type,
+                s.ticker_symbol,
+                t.quantity,
+                t.price,
+                t.total_amount,
+                CASE
+                    WHEN t.transaction_type = 'CANCELLED' THEN 'CANCELLED'
+                    ELSE 'COMPLETED'
+                END AS status
+            FROM transactions t
+            LEFT JOIN stocks s
+                ON t.stock_id = s.stock_id
+            WHERE t.user_id = %s
+            ORDER BY t.created_at DESC, t.transaction_id DESC
+        """
+
+        cursor.execute(sql, (user_id,))
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        connection.close()
+        
+        
+
+def get_current_orders(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        sql = """
+            SELECT
+                o.order_id,
+                o.created_at,
+                o.order_type,
+                s.ticker_symbol,
+                o.quantity,
+                o.price,
+                (o.quantity * o.price) AS total_amount,
+                o.status
+            FROM orders o
+            JOIN stocks s
+                ON o.stock_id = s.stock_id
+            WHERE o.user_id = %s
+                AND o.status = 'PENDING'
+            ORDER BY o.created_at DESC, o.order_id DESC
+        """
+
+        cursor.execute(sql, (user_id,))
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        connection.close()
    
 @app.route("/")
 def customer_dashboard():
@@ -83,6 +146,10 @@ def portfolio():
 @app.route("/transactions")
 def transactions():
     return render_template("transaction_history.html")
+    
+@app.route("/orders")
+def current_orders():
+    return render_template("current_orders.html")
     
 @app.route("/login")
 def login():

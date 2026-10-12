@@ -545,3 +545,16 @@ nav .login-nav-button:hover {
     color: #4d3958;
     transform: translateY(-2px);
 }
+
+/* Pending Order Status */
+
+.status.pending {
+    display: inline-block;
+    background-color: #fff1d6;
+    color: #946200;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
