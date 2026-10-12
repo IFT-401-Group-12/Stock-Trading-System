@@ -6,9 +6,12 @@ from flask import (
     Flask, flash, jsonify, redirect, render_template, request, session, url_for,
 )
 
+from admin import admin_bp
+from auth import current_admin_id, current_user_id
 from db import get_db_connection
 from market import get_market_status, to_eastern
 from price_generator import start_price_generator
+from stocks import create_stock  # noqa: F401  (Sarah's function; used by the admin pages)
 from trading import (
     TradeError, cancel_order, get_cash_balance, get_holdings, get_live_stocks,
     get_orders, place_buy_order, place_sell_order,
@@ -18,21 +21,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-only-change-me")
+app.register_blueprint(admin_bp)
 
 
 # ---------------------------------------------------------------------------
-# Current user
+# Current user (see auth.py)
 # ---------------------------------------------------------------------------
-
-def current_user_id():
-    """The logged-in customer's user_id.
-
-    Login should set session["user_id"] after checking the password. Until
-    login is wired up, set DEV_USER_ID in .env to test as that user.
-    """
-    user_id = session.get("user_id") or os.getenv("DEV_USER_ID")
-    return int(user_id) if user_id else None
-
 
 def login_required_redirect():
     flash("Please log in to trade.", "error")
@@ -76,56 +70,13 @@ def inject_market_status():
             connection.close()
     except Exception:
         is_open, message = False, "Market status unavailable"
-    return {"market_open": is_open, "market_message": message}
-
-
-# ---------------------------------------------------------------------------
-# Admin: create stock (Sarah)
-# ---------------------------------------------------------------------------
-
-def create_stock(ticker_symbol, company_name, initial_price, volume_available, created_by=None):
-    connection = get_db_connection()
-    cursor = connection.cursor()
 
     try:
-        sql = """
-            INSERT INTO stocks
-            (
-                ticker_symbol,
-                company_name,
-                current_price,
-                open_price,
-                day_high,
-                day_low,
-                volume_available,
-                created_by
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """
-
-        values = (
-            ticker_symbol.upper(),
-            company_name,
-            initial_price,
-            initial_price,
-            initial_price,
-            initial_price,
-            volume_available,
-            created_by
-        )
-
-        cursor.execute(sql, values)
-        connection.commit()
-
-        return cursor.lastrowid
-
+        is_admin = current_admin_id() is not None
     except Exception:
-        connection.rollback()
-        raise
+        is_admin = False
 
-    finally:
-        cursor.close()
-        connection.close()
+    return {"market_open": is_open, "market_message": message, "is_admin": is_admin}
 
 
 # ---------------------------------------------------------------------------

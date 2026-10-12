@@ -46,3 +46,17 @@ market to be open; every executed order and every cancellation writes a
 **The price generator starts on the first page request** and only one copy ever
 runs, even with several app processes (it holds a MySQL named lock). It only
 moves prices while the market is open.
+
+## Administrator pages
+
+Admin pages live under `/admin` and only open for users with a row in the
+`admins` table (customers who aren't admins are sent back to the dashboard).
+Admins see an **Admin** link in the customer nav.
+
+| Page | Status |
+|---|---|
+| `/admin/stocks`: Create Stock + current listings | Working. Saves through `create_stock()` in `stocks.py` (Sarah's function, moved out of `app.py` unchanged). New stocks start moving with the price generator right away. |
+| `/admin/market-hours`: weekly hours + holidays | Page is built and shows the real schedule and holidays. **Saving is a stub:** fill in the three functions in `market_admin.py` (Develop Market Hours Function); the docstrings describe exactly what each should do. |
+
+Admin code: `admin.py` (routes + admin check), `auth.py` (current user / admin),
+`templates/admin/`.

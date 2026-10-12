@@ -981,3 +981,243 @@ td,
         gap: 0;
     }
 }
+
+
+/* ================================
+   ATHENA TRADING - ADMIN
+   Create Stock / Market Hours
+   ================================ */
+
+.admin-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #c9a7dd;
+    color: #2e2239;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+nav a.active {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+nav a.admin-nav-link {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.flash.info {
+    background-color: #f3edf7;
+    border-color: #e2d4ea;
+    color: #5a4566;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.muted-line {
+    display: block;
+    margin-top: 3px;
+    color: #9a8fa2;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Field-level errors */
+.form-group.has-error input {
+    border-color: #d79aab;
+    background-color: #fdf6f8;
+}
+
+.field-error {
+    margin: 6px 0 0;
+    color: #a35a6d;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ticker-input {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Weekly schedule */
+.schedule-card:hover,
+.holiday-card:hover {
+    transform: none;
+}
+
+.schedule-card {
+    margin-top: 6px;
+}
+
+.schedule-list {
+    display: grid;
+    gap: 4px;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 150px 130px 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.schedule-row:hover {
+    background-color: #faf5fc;
+}
+
+.schedule-day strong {
+    color: #3f3549;
+}
+
+.schedule-times {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.schedule-times input,
+.form-group input[type="date"] {
+    padding: 10px 12px;
+    border: 1px solid #ddd1e2;
+    border-radius: 10px;
+    background-color: #fdfbfe;
+    color: #342f40;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.schedule-times input:focus {
+    outline: none;
+    border-color: #a982ad;
+    box-shadow: 0 0 0 3px rgba(169, 130, 173, 0.12);
+}
+
+.schedule-row.is-closed .schedule-times {
+    opacity: 0.4;
+}
+
+.schedule-to {
+    color: #9a8fa2;
+    font-size: 13px;
+}
+
+.schedule-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.schedule-actions .primary-button,
+.holiday-card .primary-button {
+    width: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+/* Open / Closed switch */
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.switch-track {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background-color: #e1d7e6;
+    transition: background-color 0.2s ease;
+}
+
+.switch-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(50, 35, 60, 0.25);
+    transition: transform 0.2s ease;
+}
+
+.switch input:checked + .switch-track {
+    background-color: #7ba287;
+}
+
+.switch input:checked + .switch-track::after {
+    transform: translateX(18px);
+}
+
+.switch input:focus-visible + .switch-track {
+    outline: 2px solid #a982ad;
+    outline-offset: 2px;
+}
+
+.switch-label {
+    width: 52px;
+    color: #6f6377;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Holidays */
+.holiday-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.holiday-card h3 {
+    margin-bottom: 18px;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+@media (max-width: 850px) {
+    .holiday-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-row {
+        grid-template-columns: 1fr auto;
+    }
+
+    .schedule-times {
+        grid-column: 1 / -1;
+    }
+}

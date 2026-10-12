@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{# Admin pages: same Athena look, with the ADMIN badge and admin-only navigation. #}
+
+{% block brand %}
+<h1>Athena Trading ✦ <span class="admin-badge">Admin</span></h1>
+{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('admin.stocks') }}"
+   class="{{ 'active' if request.endpoint == 'admin.stocks' }}">Stocks</a>
+<a href="{{ url_for('admin.market_hours') }}"
+   class="{{ 'active' if request.endpoint == 'admin.market_hours' }}">Market Hours</a>
+<a href="{{ url_for('customer_dashboard') }}" class="login-nav-button">Customer View</a>
+{% endblock %}
