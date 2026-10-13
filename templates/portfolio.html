@@ -1,0 +1,70 @@
+
+{% extends "base.html" %}
+
+{% block title %}Portfolio | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Your Portfolio</h2>
+    <p>A little snapshot of everything you're building. ✦</p>
+</section>
+
+<section class="summary-grid">
+
+    <div class="card">
+        <h3>Available Cash</h3>
+        <p class="value">{{ cash_balance | usd }}</p>
+        <p>Cash currently available for trading.</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Portfolio Value</h3>
+        <p class="value">{{ total_portfolio_value | usd }}</p>
+        <p>Current value of your cash and stock holdings.</p>
+    </div>
+
+</section>
+
+<section class="portfolio-section">
+
+    <div class="section-heading">
+        <div>
+            <h3>Your Holdings</h3>
+            <p>Stocks currently held in your portfolio.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Shares</th>
+                    <th>Current Price</th>
+                    <th>Total Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for holding in holdings %}
+                <tr>
+                    <td><strong>{{ holding.ticker_symbol }}</strong></td>
+                    <td>{{ holding.company_name }}</td>
+                    <td>{{ holding.quantity }}</td>
+                    <td>{{ holding.current_price | usd }}</td>
+                    <td>{{ (holding.quantity * holding.current_price) | usd }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">You don't own any stocks yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% endblock %}

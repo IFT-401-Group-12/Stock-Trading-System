@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account | Athena Trading{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <section class="auth-brand">
+        <div>
+            <p class="auth-symbol">✦</p>
+            <h2>Athena Trading</h2>
+            <p>Invest with confidence. Build something beautiful.</p>
+        </div>
+
+    </section>
+
+    <section class="auth-form">
+
+        <div class="auth-form-content">
+
+            <p class="eyebrow">BEGIN YOUR JOURNEY ✦</p>
+
+            <h2>Create your account</h2>
+
+            <p class="form-description">
+                Start building your portfolio with Athena Trading.
+            </p>
+
+            <form>
+
+                <div class="name-row">
+
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input
+                            type="text"
+                            id="first_name"
+                            name="first_name"
+                            placeholder="First name"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            placeholder="Last name"
+                            required>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        required>
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="{{ url_for('login') }}">Log in</a>
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

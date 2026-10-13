@@ -1,0 +1,1236 @@
+/* ================================
+   ATHENA TRADING
+   Customer Interface
+   ================================ */
+
+
+/* Basic page setup */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #f2eafb 0%, transparent 32%),
+        radial-gradient(circle at bottom right, #fbecef 0%, transparent 30%),
+        #faf8fc;
+    color: #342f40;
+    min-height: 100vh;
+}
+
+
+/* Header and navigation */
+header {
+    background: linear-gradient(135deg, #31263f, #554166);
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(69, 51, 84, 0.15);
+}
+
+.brand h1 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+}
+
+nav a {
+    color: #f9f4fc;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #eee3f5;
+    color: #4a3659;
+    transform: translateY(-2px);
+}
+
+
+/* Main page area */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 45px 40px;
+}
+
+.page-heading {
+    margin-bottom: 30px;
+}
+
+.page-heading h2 {
+    margin: 0 0 8px;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: normal;
+    color: #453451;
+}
+
+.page-heading p {
+    margin: 0;
+    color: #81758a;
+}
+
+
+/* Dashboard cards */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: rgba(255, 253, 255, 0.92);
+    padding: 27px;
+    border-radius: 18px;
+    border: 1px solid #e8deec;
+    box-shadow: 0 8px 24px rgba(75, 55, 90, 0.07);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #d8c4e2;
+    box-shadow: 0 12px 30px rgba(75, 55, 90, 0.12);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #51405d;
+}
+
+.card .value {
+    margin: 12px 0;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    color: #8a668f;
+}
+
+.card p {
+    color: #756b7c;
+}
+
+.card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #8a668f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.card a:hover {
+    color: #4b3858;
+}
+
+
+/* Tables */
+.table-container {
+    background: rgba(255, 253, 255, 0.94);
+    border: 1px solid #e8deec;
+    border-radius: 16px;
+    overflow-x: auto;
+    box-shadow: 0 8px 24px rgba(75, 55, 90, 0.07);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee7f1;
+}
+
+th {
+    background-color: #f3edf7;
+    color: #574363;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+
+td {
+    color: #514b57;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #faf5fc;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Small screens */
+@media (max-width: 750px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+    }
+
+    main {
+        padding: 30px 20px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* Portfolio */
+.portfolio-section {
+    margin-top: 35px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-heading h3 {
+    margin: 0 0 5px;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: normal;
+    color: #51405d;
+}
+
+.section-heading p {
+    margin: 0;
+    color: #81758a;
+    font-size: 14px;
+}
+/* Transaction History */
+.transaction,
+.status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.transaction.buy {
+    background-color: #e8f3ed;
+    color: #547363;
+}
+
+.transaction.sell {
+    background-color: #eee8f5;
+    color: #725b84;
+}
+
+.transaction.deposit {
+    background-color: #f3eafa;
+    color: #75568a;
+}
+
+.transaction.withdrawal {
+    background-color: #faedf1;
+    color: #9a6173;
+}
+
+.transaction.cancelled {
+    background-color: #f3f0f4;
+    color: #756d79;
+}
+
+.status.completed {
+    background-color: #edf5ef;
+    color: #57725e;
+}
+
+.status.cancelled-status {
+    background-color: #f5edef;
+    color: #936473;
+}
+/* Market */
+.market-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 7px 13px;
+    background-color: #edf7f0;
+    color: #547363;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.market-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #6fa47f;
+    border-radius: 50%;
+}
+
+.stock-price {
+    font-weight: bold;
+    color: #624d70;
+}
+
+.stock-status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.stock-status.live {
+    background-color: #edf5ef;
+    color: #57725e;
+}
+/* ================================
+   ATHENA TRADING - LOGIN & SIGN UP
+   ================================ */
+
+.auth-container {
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    background: rgba(255, 253, 255, 0.95);
+    border: 1px solid #e8deec;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px rgba(75, 55, 90, 0.10);
+}
+
+/* Ethereal branding panel */
+.auth-brand {
+    position: relative;
+    padding: 55px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(232, 210, 244, 0.35), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(244, 207, 222, 0.25), transparent 35%),
+        linear-gradient(145deg, #342540, #665071 55%, #92758f);
+}
+
+.auth-brand::after {
+    content: "✦";
+    position: absolute;
+    right: 35px;
+    bottom: 65px;
+    font-size: 130px;
+    color: rgba(255, 255, 255, 0.05);
+}
+
+.auth-symbol {
+    margin: 0 0 20px;
+    font-size: 34px;
+    color: #ead8ef;
+}
+
+.auth-brand h2 {
+    margin: 0 0 16px;
+    font-family: Georgia, serif;
+    font-size: 42px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.auth-brand > div > p:last-child {
+    max-width: 310px;
+    color: #eee4f1;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.auth-footer {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+/* Form side */
+.auth-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px;
+}
+
+.auth-form-content {
+    width: 100%;
+    max-width: 480px;
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: #a17ba6;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+.auth-form h2 {
+    margin: 0 0 10px;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: normal;
+    color: #453451;
+}
+
+.form-description {
+    margin: 0 0 30px;
+    color: #81758a;
+}
+
+
+/* Form fields */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #51475a;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #ddd1e2;
+    border-radius: 10px;
+    background-color: #fdfbfe;
+    color: #342f40;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.form-group input:focus {
+    background-color: white;
+    border-color: #a982ad;
+    box-shadow: 0 0 0 3px rgba(169, 130, 173, 0.12);
+}
+
+.form-group input::placeholder {
+    color: #b1a7b5;
+}
+
+.name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+
+/* Main form button */
+.primary-button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #70567d, #95729b);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(112, 86, 125, 0.20);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(112, 86, 125, 0.28);
+}
+
+
+/* Login / signup switch */
+.auth-switch {
+    margin-top: 24px;
+    text-align: center;
+    color: #81758a;
+    font-size: 13px;
+}
+
+.auth-switch a {
+    color: #896492;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    color: #503b5c;
+}
+
+
+/* Authentication pages on smaller screens */
+@media (max-width: 850px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-brand {
+        min-height: 280px;
+        padding: 40px;
+    }
+
+    .auth-form {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .name-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+/* Login button in navigation */
+nav .login-nav-button {
+    margin-left: 8px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #eadcf0, #f4e5ed);
+    color: #4d3958;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 3px 10px rgba(32, 21, 39, 0.15);
+}
+
+nav .login-nav-button:hover {
+    background: white;
+    color: #4d3958;
+    transform: translateY(-2px);
+}
+
+/* Pending Order Status */
+
+.status.pending {
+    display: inline-block;
+    background-color: #fff1d6;
+    color: #946200;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* ================================
+   ATHENA TRADING - TRADING
+   Buy / Sell / Orders / live prices
+   ================================ */
+
+/* Flash messages */
+.flash-stack {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.flash {
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.flash.success {
+    background-color: #edf5ef;
+    border-color: #d3e6d9;
+    color: #3f5f4a;
+}
+
+.flash.error {
+    background-color: #f8ecef;
+    border-color: #ecd2d9;
+    color: #8a4d5f;
+}
+
+/* Market closed variant of the status pill */
+.market-status.closed {
+    background-color: #f5edef;
+    color: #936473;
+}
+
+.market-status.closed .market-dot {
+    background-color: #c48899;
+}
+
+/* Price movement */
+.change {
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    color: #81758a;
+}
+
+.change.up {
+    color: #4f7d5f;
+}
+
+.change.down {
+    color: #a35a6d;
+}
+
+.stock-price,
+td,
+.summary-list dd {
+    font-variant-numeric: tabular-nums;
+}
+
+@keyframes tick-up-flash {
+    from { background-color: #dff0e5; }
+    to   { background-color: transparent; }
+}
+
+@keyframes tick-down-flash {
+    from { background-color: #f6e0e6; }
+    to   { background-color: transparent; }
+}
+
+.tick-up {
+    animation: tick-up-flash 1.2s ease-out;
+}
+
+.tick-down {
+    animation: tick-down-flash 1.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tick-up,
+    .tick-down {
+        animation: none;
+    }
+}
+
+.stock-status.halted {
+    background-color: #f5edef;
+    color: #936473;
+}
+
+/* Small pill buttons (table rows, toolbars) */
+.pill-button {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.pill-button:hover {
+    transform: translateY(-1px);
+}
+
+.pill-button.buy {
+    background-color: #e8f3ed;
+    color: #47684f;
+    border-color: #d3e6d9;
+}
+
+.pill-button.buy:hover {
+    background-color: #dbeee2;
+}
+
+.pill-button.sell {
+    background-color: #eee8f5;
+    color: #66507a;
+    border-color: #e0d6ea;
+}
+
+.pill-button.sell:hover {
+    background-color: #e5dcf0;
+}
+
+.pill-button.cancel {
+    background-color: white;
+    color: #936473;
+    border-color: #ecd2d9;
+}
+
+.pill-button.cancel:hover {
+    background-color: #f8ecef;
+}
+
+.pill-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.trade-actions,
+.row-action {
+    white-space: nowrap;
+}
+
+.trade-actions .pill-button + .pill-button {
+    margin-left: 6px;
+}
+
+.row-action form {
+    margin: 0;
+}
+
+.muted {
+    color: #b1a7b5;
+}
+
+.empty-row {
+    padding: 34px 16px;
+    text-align: center;
+    color: #81758a;
+}
+
+.table-note {
+    margin-top: 12px;
+    color: #9a8fa2;
+    font-size: 13px;
+}
+
+.portfolio-section.first {
+    margin-top: 10px;
+}
+
+/* Trade page toolbar: Buy / Sell tabs + market status */
+.trade-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.trade-toolbar .market-status {
+    margin-bottom: 0;
+}
+
+.trade-tabs {
+    display: inline-flex;
+    padding: 4px;
+    background-color: #f1eaf5;
+    border: 1px solid #e8deec;
+    border-radius: 999px;
+}
+
+.trade-tab {
+    padding: 9px 26px;
+    border-radius: 999px;
+    color: #7a6d84;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.trade-tab:hover {
+    color: #4b3858;
+}
+
+.trade-tab.active {
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(75, 55, 90, 0.10);
+}
+
+.trade-tab.active.buy {
+    color: #47684f;
+}
+
+.trade-tab.active.sell {
+    color: #66507a;
+}
+
+/* Trade form + summary layout */
+.trade-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.trade-layout .card:hover {
+    transform: none;
+}
+
+.trade-card h3,
+.summary-card h3,
+.empty-card h3 {
+    margin-bottom: 22px;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #ddd1e2;
+    border-radius: 10px;
+    background-color: #fdfbfe;
+    color: #342f40;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+}
+
+.form-group select:focus {
+    background-color: white;
+    border-color: #a982ad;
+    box-shadow: 0 0 0 3px rgba(169, 130, 173, 0.12);
+}
+
+.form-group .label {
+    display: block;
+    margin-bottom: 7px;
+    color: #51475a;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.segmented {
+    display: inline-flex;
+    padding: 4px;
+    background-color: #f6f1f9;
+    border: 1px solid #e8deec;
+    border-radius: 12px;
+}
+
+.segmented label {
+    position: relative;
+    cursor: pointer;
+}
+
+.segmented input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.segmented span {
+    display: block;
+    padding: 8px 20px;
+    border-radius: 9px;
+    color: #7a6d84;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.segmented input:checked + span {
+    background-color: white;
+    color: #4b3858;
+    box-shadow: 0 2px 6px rgba(75, 55, 90, 0.10);
+}
+
+.segmented input:focus-visible + span {
+    outline: 2px solid #a982ad;
+    outline-offset: 2px;
+}
+
+.hint {
+    margin: 8px 0 0;
+    color: #8d8195;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.form-error {
+    margin: 0 0 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background-color: #f8ecef;
+    color: #8a4d5f;
+    font-size: 13px;
+}
+
+.text-button {
+    margin-top: 6px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #896492;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.text-button:hover {
+    color: #503b5c;
+}
+
+.primary-button.buy-button {
+    background: linear-gradient(135deg, #5d8669, #7ba287);
+    box-shadow: 0 5px 15px rgba(79, 125, 95, 0.22);
+}
+
+.primary-button.sell-button {
+    background: linear-gradient(135deg, #8f5e74, #b07f92);
+    box-shadow: 0 5px 15px rgba(143, 94, 116, 0.22);
+}
+
+.primary-button:disabled {
+    background: #d9d0de;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Order summary */
+.summary-list {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.summary-list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.summary-list dt {
+    color: #81758a;
+}
+
+.summary-list dd {
+    margin: 0;
+    color: #3f3549;
+    font-weight: bold;
+    text-align: right;
+}
+
+.summary-list .summary-total {
+    padding-top: 14px;
+    border-top: 1px solid #eee7f1;
+}
+
+.summary-list .summary-total dt {
+    color: #51405d;
+    font-weight: bold;
+}
+
+.summary-list .summary-total dd {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: normal;
+    color: #6f5479;
+}
+
+.summary-list.cash-list {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: #f8f4fa;
+}
+
+.empty-card {
+    max-width: 560px;
+}
+
+@media (max-width: 850px) {
+    .trade-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+
+/* ================================
+   ATHENA TRADING - ADMIN
+   Create Stock / Market Hours
+   ================================ */
+
+.admin-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #c9a7dd;
+    color: #2e2239;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+nav a.active {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+nav a.admin-nav-link {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.flash.info {
+    background-color: #f3edf7;
+    border-color: #e2d4ea;
+    color: #5a4566;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.muted-line {
+    display: block;
+    margin-top: 3px;
+    color: #9a8fa2;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Field-level errors */
+.form-group.has-error input {
+    border-color: #d79aab;
+    background-color: #fdf6f8;
+}
+
+.field-error {
+    margin: 6px 0 0;
+    color: #a35a6d;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ticker-input {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Weekly schedule */
+.schedule-card:hover,
+.holiday-card:hover {
+    transform: none;
+}
+
+.schedule-card {
+    margin-top: 6px;
+}
+
+.schedule-list {
+    display: grid;
+    gap: 4px;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 150px 130px 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.schedule-row:hover {
+    background-color: #faf5fc;
+}
+
+.schedule-day strong {
+    color: #3f3549;
+}
+
+.schedule-times {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.schedule-times input,
+.form-group input[type="date"] {
+    padding: 10px 12px;
+    border: 1px solid #ddd1e2;
+    border-radius: 10px;
+    background-color: #fdfbfe;
+    color: #342f40;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.schedule-times input:focus {
+    outline: none;
+    border-color: #a982ad;
+    box-shadow: 0 0 0 3px rgba(169, 130, 173, 0.12);
+}
+
+.schedule-row.is-closed .schedule-times {
+    opacity: 0.4;
+}
+
+.schedule-to {
+    color: #9a8fa2;
+    font-size: 13px;
+}
+
+.schedule-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.schedule-actions .primary-button,
+.holiday-card .primary-button {
+    width: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+/* Open / Closed switch */
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.switch-track {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background-color: #e1d7e6;
+    transition: background-color 0.2s ease;
+}
+
+.switch-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(50, 35, 60, 0.25);
+    transition: transform 0.2s ease;
+}
+
+.switch input:checked + .switch-track {
+    background-color: #7ba287;
+}
+
+.switch input:checked + .switch-track::after {
+    transform: translateX(18px);
+}
+
+.switch input:focus-visible + .switch-track {
+    outline: 2px solid #a982ad;
+    outline-offset: 2px;
+}
+
+.switch-label {
+    width: 52px;
+    color: #6f6377;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Holidays */
+.holiday-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.holiday-card h3 {
+    margin-bottom: 18px;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+@media (max-width: 850px) {
+    .holiday-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-row {
+        grid-template-columns: 1fr auto;
+    }
+
+    .schedule-times {
+        grid-column: 1 / -1;
+    }
+}

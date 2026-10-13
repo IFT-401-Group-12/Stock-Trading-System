@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block title %}Current Orders | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Current Orders</h2>
+    <p>Every move has a moment. Keep track of what's in motion. ✦</p>
+</section>
+
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date Placed</th>
+                <th>Type</th>
+                <th>Ticker</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Estimated Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.created_at.strftime('%b %d, %Y') }}</td>
+
+                <td>
+                    <span class="transaction {{ order.order_type|lower }}">
+                        {{ order.order_type|capitalize }}
+                    </span>
+                </td>
+
+                <td>{{ order.ticker_symbol }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>${{ "{:,.2f}".format(order.price) }}</td>
+                <td>${{ "{:,.2f}".format(order.total_amount) }}</td>
+
+                <td>
+                    <span class="status pending">Pending</span>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center;">
+                    No pending orders right now. You're all caught up! ✦
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

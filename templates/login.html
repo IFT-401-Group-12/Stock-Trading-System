@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Log In | Athena Trading{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <section class="auth-brand">
+        <div>
+            <p class="auth-symbol">✦</p>
+            <h2>Athena Trading</h2>
+            <p>Invest with confidence. Build something beautiful.</p>
+        </div>
+
+    </section>
+
+    <section class="auth-form">
+
+        <div class="auth-form-content">
+
+            <p class="eyebrow">WELCOME BACK ✦</p>
+
+            <h2>Log in to your account</h2>
+
+            <p class="form-description">
+                Your portfolio is waiting for you.
+            </p>
+
+            <form>
+
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username or email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required>
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Log In
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                New to Athena?
+                <a href="{{ url_for('signup') }}">Create an account</a>
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

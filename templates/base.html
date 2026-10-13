@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Athena Trading{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            {% block brand %}
+            <h1>Athena Trading ✦</h1>
+            {% endblock %}
+        </div>
+
+        <nav>
+            {% block nav %}
+            <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('stocks') }}">Stocks</a>
+            <a href="{{ url_for('buy') }}">Trade</a>
+            <a href="{{ url_for('orders') }}">Orders</a>
+            <a href="{{ url_for('portfolio') }}">Portfolio</a>
+			<a href="{{ url_for('orders') }}">Orders</a>
+            <a href="{{ url_for('transactions') }}">Transaction History</a>
+            {% if is_admin %}
+            <a href="{{ url_for('admin.stocks') }}" class="admin-nav-link">Admin</a>
+            {% endif %}
+			<a href="{{ url_for('login') }}" class="login-nav-button">Log In</a>
+            {% endblock %}
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}" role="status">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>
