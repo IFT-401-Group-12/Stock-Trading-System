@@ -159,7 +159,27 @@ def stocks():
 
 @app.route("/portfolio")
 def portfolio():
-    return render_template("portfolio.html")
+    user_id = current_user_id()
+
+    if not user_id:
+        return login_required_redirect()
+
+    cash_balance = get_cash_balance(user_id)
+    holdings = get_holdings(user_id)
+
+    holdings_value = sum(
+        Decimal(str(holding["quantity"])) * Decimal(str(holding["current_price"]))
+        for holding in holdings
+    )
+
+    total_portfolio_value = cash_balance + holdings_value
+
+    return render_template(
+        "portfolio.html",
+        cash_balance=cash_balance,
+        holdings=holdings,
+        total_portfolio_value=total_portfolio_value,
+    )
 
 
 @app.route("/transactions")
