@@ -139,13 +139,37 @@ def _return_shares(cursor, user_id, stock_id, quantity):
     )
 
 
+
 def _record_transaction(cursor, user_id, stock_id, order_id, kind, quantity, price, total):
+    # Read the user's cash balance after the trade or cancellation updates.
+    cursor.execute(
+        "SELECT cash_balance FROM users WHERE user_id = %s",
+        (user_id,),
+    )
+    user = cursor.fetchone()
+
+    if user is None:
+        raise TradeError("Unable to record the transaction: user not found.")
+
+    balance_after = user["cash_balance"]
+
     cursor.execute(
         "INSERT INTO transactions "
-        "(user_id, stock_id, order_id, transaction_type, quantity, price, total_amount) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        (user_id, stock_id, order_id, kind, quantity, price, total),
+        "(user_id, stock_id, order_id, transaction_type, quantity, "
+        "price, total_amount, balance_after) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+        (
+            user_id,
+            stock_id,
+            order_id,
+            kind,
+            quantity,
+            price,
+            total,
+            balance_after,
+        ),
     )
+
 
 
 def _require_market_open(connection):

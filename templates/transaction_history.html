@@ -20,6 +20,7 @@
                 <th>Shares</th>
                 <th>Price</th>
                 <th>Total</th>
+				<th>Balance After</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -47,6 +48,14 @@
         </td>
 
         <td>${{ "{:,.2f}".format(transaction.total_amount) }}</td>
+		
+		<td>
+			{% if transaction.balance_after is not none %}
+				{{ transaction.balance_after | usd }}
+			{% else %}
+				—
+			{% endif %}
+		</td>
 
         <td>
             {% if transaction.status == 'CANCELLED' %}
@@ -58,7 +67,7 @@
     </tr>
     {% else %}
     <tr>
-        <td colspan="7" style="text-align: center;">
+        <td colspan="8" style="text-align: center;">
             No transactions to display yet.
         </td>
     </tr>

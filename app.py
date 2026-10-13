@@ -89,24 +89,28 @@ def get_transaction_history(user_id):
 
     try:
         sql = """
-            SELECT
-                t.transaction_id,
-                t.created_at,
-                t.transaction_type,
-                s.ticker_symbol,
-                t.quantity,
-                t.price,
-                t.total_amount,
-                CASE
-                    WHEN t.transaction_type = 'CANCELLED' THEN 'CANCELLED'
-                    ELSE 'COMPLETED'
-                END AS status
-            FROM transactions t
-            LEFT JOIN stocks s
-                ON t.stock_id = s.stock_id
-            WHERE t.user_id = %s
-            ORDER BY t.created_at DESC, t.transaction_id DESC
+        SELECT
+            t.transaction_id,
+            t.created_at,
+            t.transaction_type,
+            s.ticker_symbol,
+            t.quantity,
+            t.price,
+            t.total_amount,
+            t.linked_account_id,
+            t.balance_after,
+            CASE
+                WHEN t.transaction_type = 'CANCELLED' THEN 'CANCELLED'
+                ELSE 'COMPLETED'
+            END AS status
+        FROM transactions t
+        LEFT JOIN stocks s
+            ON t.stock_id = s.stock_id
+        WHERE t.user_id = %s
+        ORDER BY t.created_at DESC, t.transaction_id DESC
         """
+
+        
 
         cursor.execute(sql, (user_id,))
         return cursor.fetchall()
