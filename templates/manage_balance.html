@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Manage Balance · Athena Trading{% endblock %}
+
+{% block content %}
+<div class="balance-page">
+  <h1>Manage Balance</h1>
+  <p class="subtitle">Deposit or withdraw simulated funds between your bank and your trading account.</p>
+
+  <div class="balance-card">
+    <div class="current-balance">
+      <span class="label">Current Cash Balance</span>
+      <span class="amount">{{ cash | usd }}</span>
+    </div>
+
+    {% if accounts %}
+      <form method="POST" class="balance-form">
+        <label for="linked_account_id">Bank Account</label>
+        <select name="linked_account_id" id="linked_account_id" required>
+          {% for account in accounts %}
+            <option value="{{ account.linked_account_id }}">
+              {{ account.bank_name }}{% if account.account_nickname %} · {{ account.account_nickname }}{% endif %} ({{ account.account_identifier }})
+            </option>
+          {% endfor %}
+        </select>
+
+        <label for="amount">Amount</label>
+        <input type="text" name="amount" id="amount" placeholder="0.00" required>
+
+        <div class="balance-actions">
+          <button type="submit" name="action" value="deposit" class="btn-deposit">Deposit</button>
+          <button type="submit" name="action" value="withdraw" class="btn-withdraw">Withdraw</button>
+        </div>
+      </form>
+      <p class="note">Withdrawals can't exceed your available cash balance.</p>
+    {% else %}
+      <p class="note">You have no linked bank accounts yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

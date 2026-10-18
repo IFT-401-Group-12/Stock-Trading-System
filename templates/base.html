@@ -28,6 +28,7 @@
             <a href="{{ url_for('portfolio') }}">Portfolio</a>
             <a href="{{ url_for('transactions') }}">Transaction History</a>
             {% if is_admin %}
+            <a href="{{ url_for('balance') }}">Balance</a>
             <a href="{{ url_for('admin.stocks') }}" class="admin-nav-link">Admin</a>
             {% endif %}
 			<a href="{{ url_for('login') }}" class="login-nav-button">Log In</a>
