@@ -28,7 +28,7 @@
         <tbody>
     {% for transaction in transactions %}
     <tr>
-        <td>{{ transaction.created_at.strftime('%b %d, %Y') }}</td>
+        <td>{{ transaction.created_at | et('%b %d, %Y') }}</td>
 
         <td>
             <span class="transaction {{ transaction.transaction_type|lower }}">
