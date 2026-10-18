@@ -83,10 +83,96 @@ def inject_market_status():
 # ---------------------------------------------------------------------------
 # Customer pages
 # ---------------------------------------------------------------------------
+        
+def get_transaction_history(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
 
+    try:
+        sql = """
+        SELECT
+            t.transaction_id,
+            t.created_at,
+            t.transaction_type,
+            s.ticker_symbol,
+            t.quantity,
+            t.price,
+            t.total_amount,
+            t.linked_account_id,
+            t.balance_after,
+            CASE
+                WHEN t.transaction_type = 'CANCELLED' THEN 'CANCELLED'
+                ELSE 'COMPLETED'
+            END AS status
+        FROM transactions t
+        LEFT JOIN stocks s
+            ON t.stock_id = s.stock_id
+        WHERE t.user_id = %s
+        ORDER BY t.created_at DESC, t.transaction_id DESC
+        """
+
+        
+
+        cursor.execute(sql, (user_id,))
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        connection.close()
+        
+        
+
+def get_current_orders(user_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        sql = """
+            SELECT
+                o.order_id,
+                o.created_at,
+                o.order_type,
+                s.ticker_symbol,
+                o.quantity,
+                o.price,
+                (o.quantity * o.price) AS total_amount,
+                o.status
+            FROM orders o
+            JOIN stocks s
+                ON o.stock_id = s.stock_id
+            WHERE o.user_id = %s
+                AND o.status = 'PENDING'
+            ORDER BY o.created_at DESC, o.order_id DESC
+        """
+
+        cursor.execute(sql, (user_id,))
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        connection.close()
+   
 @app.route("/")
+@app.route("/dashboard")
 def customer_dashboard():
-    return render_template("customer_dashboard.html")
+    user_id = current_user_id()
+
+    if not user_id:
+        return login_required_redirect()
+
+    cash_balance = get_cash_balance(user_id)
+    holdings = get_holdings(user_id)
+
+    holdings_value = sum(
+        Decimal(str(holding["quantity"])) * Decimal(str(holding["current_price"]))
+        for holding in holdings
+    )
+
+    return render_template(
+        "dashboard.html",
+        cash_balance=cash_balance,
+        total_portfolio_value=cash_balance + holdings_value,
+    )
 
 
 @app.route("/stocks")
@@ -96,13 +182,42 @@ def stocks():
 
 @app.route("/portfolio")
 def portfolio():
-    return render_template("portfolio.html")
+    user_id = current_user_id()
+
+    if not user_id:
+        return login_required_redirect()
+
+    cash_balance = get_cash_balance(user_id)
+    holdings = get_holdings(user_id)
+
+    holdings_value = sum(
+        Decimal(str(holding["quantity"])) * Decimal(str(holding["current_price"]))
+        for holding in holdings
+    )
+
+    total_portfolio_value = cash_balance + holdings_value
+
+    return render_template(
+        "portfolio.html",
+        cash_balance=cash_balance,
+        holdings=holdings,
+        total_portfolio_value=total_portfolio_value,
+    )
 
 
 @app.route("/transactions")
 def transactions():
-    return render_template("transaction_history.html")
+    user_id = current_user_id()
 
+    if not user_id:
+        return login_required_redirect()
+
+    transactions = get_transaction_history(user_id)
+
+    return render_template(
+        "transaction_history.html",
+        transactions=transactions
+    )
 
 @app.route("/login")
 def login():

@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Portfolio | Athena Trading{% endblock %}
@@ -13,13 +14,13 @@
 
     <div class="card">
         <h3>Available Cash</h3>
-        <p class="value">$12,450.00</p>
+        <p class="value">{{ cash_balance | usd }}</p>
         <p>Cash currently available for trading.</p>
     </div>
 
     <div class="card">
         <h3>Total Portfolio Value</h3>
-        <p class="value">$28,734.50</p>
+        <p class="value">{{ total_portfolio_value | usd }}</p>
         <p>Current value of your cash and stock holdings.</p>
     </div>
 
@@ -35,7 +36,6 @@
     </div>
 
     <div class="table-container">
-
         <table>
             <thead>
                 <tr>
@@ -48,42 +48,21 @@
             </thead>
 
             <tbody>
-
+                {% for holding in holdings %}
                 <tr>
-                    <td><strong>AAPL</strong></td>
-                    <td>Apple Inc.</td>
-                    <td>25</td>
-                    <td>$187.42</td>
-                    <td>$4,685.50</td>
+                    <td><strong>{{ holding.ticker_symbol }}</strong></td>
+                    <td>{{ holding.company_name }}</td>
+                    <td>{{ holding.quantity }}</td>
+                    <td>{{ holding.current_price | usd }}</td>
+                    <td>{{ (holding.quantity * holding.current_price) | usd }}</td>
                 </tr>
-
+                {% else %}
                 <tr>
-                    <td><strong>NVDA</strong></td>
-                    <td>NVIDIA Corp.</td>
-                    <td>40</td>
-                    <td>$118.11</td>
-                    <td>$4,724.40</td>
+                    <td colspan="5">You don't own any stocks yet.</td>
                 </tr>
-
-                <tr>
-                    <td><strong>GOOG</strong></td>
-                    <td>Alphabet Inc.</td>
-                    <td>30</td>
-                    <td>$138.56</td>
-                    <td>$4,156.80</td>
-                </tr>
-
-                <tr>
-                    <td><strong>AMZN</strong></td>
-                    <td>Amazon.com Inc.</td>
-                    <td>18</td>
-                    <td>$151.94</td>
-                    <td>$2,734.92</td>
-                </tr>
-
+                {% endfor %}
             </tbody>
         </table>
-
     </div>
 
 </section>
