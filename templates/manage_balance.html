@@ -1,40 +1,63 @@
 {% extends "base.html" %}
-{% block title %}Manage Balance · Athena Trading{% endblock %}
+
+{% block title %}Manage Balance | Athena Trading{% endblock %}
 
 {% block content %}
-<div class="balance-page">
-  <h1>Manage Balance</h1>
-  <p class="subtitle">Deposit or withdraw simulated funds between your bank and your trading account.</p>
 
-  <div class="balance-card">
-    <div class="current-balance">
-      <span class="label">Current Cash Balance</span>
-      <span class="amount">{{ cash | usd }}</span>
-    </div>
+<section class="page-heading">
+    <h2>Manage Balance</h2>
+    <p>Move simulated funds between your bank and your trading account. ✦</p>
+</section>
 
-    {% if accounts %}
-      <form method="POST" class="balance-form">
-        <label for="linked_account_id">Bank Account</label>
-        <select name="linked_account_id" id="linked_account_id" required>
-          {% for account in accounts %}
-            <option value="{{ account.linked_account_id }}">
-              {{ account.bank_name }}{% if account.account_nickname %} · {{ account.account_nickname }}{% endif %} ({{ account.account_identifier }})
-            </option>
-          {% endfor %}
-        </select>
+<div class="trade-layout balance-layout">
 
-        <label for="amount">Amount</label>
-        <input type="text" name="amount" id="amount" placeholder="0.00" required>
+    <section class="card trade-card">
+        <h3>Deposit or Withdraw</h3>
 
-        <div class="balance-actions">
-          <button type="submit" name="action" value="deposit" class="btn-deposit">Deposit</button>
-          <button type="submit" name="action" value="withdraw" class="btn-withdraw">Withdraw</button>
-        </div>
-      </form>
-      <p class="note">Withdrawals can't exceed your available cash balance.</p>
-    {% else %}
-      <p class="note">You have no linked bank accounts yet.</p>
-    {% endif %}
-  </div>
+        {% if accounts %}
+        <form method="POST" class="balance-form">
+            <div class="form-group">
+                <label for="linked_account_id">Bank account</label>
+                <select name="linked_account_id" id="linked_account_id" required>
+                    {% for account in accounts %}
+                    <option value="{{ account.linked_account_id }}">
+                        {{ account.bank_name }}{% if account.account_nickname %} · {{ account.account_nickname }}{% endif %} ({{ account.account_identifier }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" name="amount" id="amount" inputmode="decimal"
+                       placeholder="0.00" required>
+            </div>
+
+            <div class="balance-actions">
+                <button type="submit" name="action" value="deposit"
+                        class="primary-button buy-button">Deposit</button>
+                <button type="submit" name="action" value="withdraw"
+                        class="primary-button sell-button">Withdraw</button>
+            </div>
+        </form>
+        {% else %}
+        <p class="muted">You have no linked bank accounts yet.</p>
+        {% endif %}
+    </section>
+
+    <aside class="card summary-card">
+        <h3>Your Cash</h3>
+
+        <dl class="summary-list">
+            <div class="summary-total">
+                <dt>Current cash balance</dt>
+                <dd>{{ cash | usd }}</dd>
+            </div>
+        </dl>
+
+        <p class="hint">Deposits are sent to your bank for approval. Withdrawals can't exceed your available cash balance.</p>
+    </aside>
+
 </div>
+
 {% endblock %}
