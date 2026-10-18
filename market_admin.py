@@ -1,9 +1,7 @@
 """Market Hours & Schedule saving: Jasmine's "Develop Market Hours Function".
 
 The admin Market Hours page (templates/admin/market_hours.html) is built and
-already calls these functions. Each one currently raises NotImplementedError,
-which the page shows as a "not connected yet" notice. Fill in the bodies and
-the page works with no other changes.
+already calls these functions to save the weekly schedule and holidays.
 
 Raise MarketAdminError(message) for anything the admin did wrong (bad times,
 duplicate date, ...): the page shows the message in red and keeps them on the form.
@@ -56,22 +54,22 @@ def update_market_schedule(admin_id, days):
         name = day["day_of_week"]
         is_open = bool(day["is_open"])
 
-    if is_open:
-        open_time = day["open_time"].strip()
-        close_time = day["close_time"].strip()
+        if is_open:
+            open_time = day["open_time"].strip()
+            close_time = day["close_time"].strip()
 
-        if not open_time or not close_time:
-            raise MarketAdminError(
-                f"{name} is marked open but is missing an open or close time."
-            )
-        if open_time >= close_time:
-            raise MarketAdminError(
-                f"{name}: the open time must be earlier than the close time."
-            )
+            if not open_time or not close_time:
+                raise MarketAdminError(
+                    f"{name} is marked open but is missing an open or close time."
+                )
+            if open_time >= close_time:
+                raise MarketAdminError(
+                    f"{name}: the open time must be earlier than the close time."
+                )
 
-        cleaned.append((True, open_time, close_time, name))
-    else:
-        cleaned.append((False, None, None, name))
+            cleaned.append((True, open_time, close_time, name))
+        else:
+            cleaned.append((False, None, None, name))
 
     connection = get_db_connection()
     cursor = connection.cursor()
