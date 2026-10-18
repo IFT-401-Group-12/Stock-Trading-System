@@ -1,0 +1,144 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Market Hours | Athena Admin{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Market Hours &amp; Schedule</h2>
+    <p>Set when trading is open each week, and the days the market is closed. ✦</p>
+</section>
+
+<div class="market-status {{ '' if market_open else 'closed' }}">
+    <span class="market-dot"></span>
+    Right now: {{ market_message }}
+</div>
+
+<form method="post" action="{{ url_for('admin.save_market_hours') }}" class="card schedule-card" data-schedule>
+
+    <div class="section-heading">
+        <div>
+            <h3>Weekly Trading Hours</h3>
+            <p>All times are Eastern. Buying, selling and price movement only happen during these hours.</p>
+        </div>
+    </div>
+
+    <div class="schedule-list">
+        {% for d in days %}
+        <div class="schedule-row {{ 'is-closed' if not d.is_open }}" data-day-row>
+            <div class="schedule-day">
+                <strong>{{ d.day_of_week }}</strong>
+                {% if not d.saved %}<span class="muted-line">not set yet</span>{% endif %}
+            </div>
+
+            <label class="switch">
+                <input type="checkbox" name="{{ d.day_of_week }}_is_open" {{ 'checked' if d.is_open }}
+                       data-open-toggle aria-label="{{ d.day_of_week }} open">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-label" data-open-label>{{ 'Open' if d.is_open else 'Closed' }}</span>
+            </label>
+
+            <div class="schedule-times">
+                <label>
+                    <span class="sr-only">{{ d.day_of_week }} opens at</span>
+                    <input type="time" name="{{ d.day_of_week }}_open_time" value="{{ d.open_time or '09:30' }}"
+                           {{ 'disabled' if not d.is_open }}>
+                </label>
+                <span class="schedule-to">to</span>
+                <label>
+                    <span class="sr-only">{{ d.day_of_week }} closes at</span>
+                    <input type="time" name="{{ d.day_of_week }}_close_time" value="{{ d.close_time or '16:00' }}"
+                           {{ 'disabled' if not d.is_open }}>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="schedule-actions">
+        <button type="submit" class="primary-button">Save Trading Hours</button>
+    </div>
+
+</form>
+
+<section class="portfolio-section">
+
+    <div class="section-heading">
+        <div>
+            <h3>Market Holidays</h3>
+            <p>The market stays closed all day on these dates, even if it's a normal trading day.</p>
+        </div>
+    </div>
+
+    <div class="holiday-layout">
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Holiday</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in holidays %}
+                    <tr>
+                        <td>{{ h.holiday_date.strftime("%a, %b %-d, %Y") }}</td>
+                        <td>{{ h.description }}</td>
+                        <td class="row-action">
+                            <form method="post" action="{{ url_for('admin.remove_holiday', holiday_id=h.holiday_id) }}"
+                                  onsubmit="return confirm('Remove this holiday? The market will open normally that day.');">
+                                <button type="submit" class="pill-button cancel">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="empty-row">No holidays scheduled.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="post" action="{{ url_for('admin.add_holiday') }}" class="card holiday-card">
+            <h3>Add a Holiday</h3>
+
+            <div class="form-group">
+                <label for="holiday_date">Date</label>
+                <input type="date" id="holiday_date" name="holiday_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Holiday name</label>
+                <input type="text" id="description" name="description" maxlength="255"
+                       placeholder="e.g. Thanksgiving" required>
+            </div>
+
+            <button type="submit" class="primary-button">Add Holiday</button>
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Closed days grey out their times (disabled inputs aren't submitted, which is fine:
+// a closed day doesn't need times).
+document.querySelectorAll("[data-day-row]").forEach((row) => {
+    const toggle = row.querySelector("[data-open-toggle]");
+    const label = row.querySelector("[data-open-label]");
+    const times = row.querySelectorAll('input[type="time"]');
+
+    toggle.addEventListener("change", () => {
+        row.classList.toggle("is-closed", !toggle.checked);
+        label.textContent = toggle.checked ? "Open" : "Closed";
+        times.forEach((input) => (input.disabled = !toggle.checked));
+    });
+});
+</script>
+{% endblock %}

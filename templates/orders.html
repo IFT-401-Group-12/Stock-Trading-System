@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Orders | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Orders</h2>
+    <p>Keep an eye on what's waiting, and what's already done. ✦</p>
+</section>
+
+<div class="market-status {{ '' if market_open else 'closed' }}">
+    <span class="market-dot"></span>
+    {{ market_message }}
+</div>
+
+<section class="portfolio-section first">
+
+    <div class="section-heading">
+        <div>
+            <h3>Open Orders</h3>
+            <p>Limit orders waiting for their price. They fill automatically, or you can cancel them.</p>
+        </div>
+        <a class="pill-button buy" href="{{ url_for('buy') }}">New Order</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Placed</th>
+                    <th>Type</th>
+                    <th>Ticker</th>
+                    <th>Shares</th>
+                    <th>Limit Price</th>
+                    <th>Current Price</th>
+                    <th>Amount Held</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in open_orders %}
+                <tr>
+                    <td>{{ o.created_at | et }}</td>
+                    <td><span class="transaction {{ o.order_type | lower }}">Limit {{ o.order_type | capitalize }}</span></td>
+                    <td><strong>{{ o.ticker_symbol }}</strong></td>
+                    <td>{{ '{:,}'.format(o.quantity) }}</td>
+                    <td>{{ o.price | usd }}</td>
+                    <td class="stock-price">{{ o.current_price | usd }}</td>
+                    <td>
+                        {% if o.order_type == 'BUY' %}
+                            {{ (o.price * o.quantity) | usd }} cash
+                        {% else %}
+                            {{ '{:,}'.format(o.quantity) }} shares
+                        {% endif %}
+                    </td>
+                    <td class="row-action">
+                        <form method="post" action="{{ url_for('cancel', order_id=o.order_id) }}"
+                              onsubmit="return confirm('Cancel this {{ o.order_type | lower }} order for {{ o.quantity }} {{ o.ticker_symbol }}?');">
+                            <button type="submit" class="pill-button cancel" {{ 'disabled' if not market_open }}
+                                    title="{{ '' if market_open else 'Orders can be cancelled while the market is open' }}">
+                                Cancel
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="empty-row">No open orders. Market orders fill right away; limit orders wait here until their price is reached.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<section class="portfolio-section">
+
+    <div class="section-heading">
+        <div>
+            <h3>Recent Orders</h3>
+            <p>Your last 25 filled and cancelled orders.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Ticker</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                    <td>{{ (o.executed_at or o.created_at) | et }}</td>
+                    <td><span class="transaction {{ o.order_type | lower }}">{{ o.order_type | capitalize }}</span></td>
+                    <td><strong>{{ o.ticker_symbol }}</strong></td>
+                    <td>{{ '{:,}'.format(o.quantity) }}</td>
+                    <td>{{ o.price | usd }}</td>
+                    <td>{{ (o.price * o.quantity) | usd }}</td>
+                    <td>
+                        {% if o.status == 'EXECUTED' %}
+                            <span class="status completed">Completed</span>
+                        {% else %}
+                            <span class="status cancelled-status">Cancelled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="empty-row">No completed orders yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% endblock %}

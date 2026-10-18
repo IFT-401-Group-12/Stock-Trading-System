@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History | Athena Trading{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Transaction History</h2>
+    <p>Follow the story of your portfolio, one move at a time. ✦</p>
+</section>
+
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Ticker</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Total</th>
+				<th>Balance After</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+    {% for transaction in transactions %}
+    <tr>
+        <td>{{ transaction.created_at | et('%b %d, %Y') }}</td>
+
+        <td>
+            <span class="transaction {{ transaction.transaction_type|lower }}">
+                {{ transaction.transaction_type|capitalize }}
+            </span>
+        </td>
+
+        <td>{{ transaction.ticker_symbol or '—' }}</td>
+        <td>{{ transaction.quantity if transaction.quantity is not none else '—' }}</td>
+
+        <td>
+            {% if transaction.price is not none %}
+                ${{ "{:,.2f}".format(transaction.price) }}
+            {% else %}
+                —
+            {% endif %}
+        </td>
+
+        <td>${{ "{:,.2f}".format(transaction.total_amount) }}</td>
+		
+		<td>
+			{% if transaction.balance_after is not none %}
+				{{ transaction.balance_after | usd }}
+			{% else %}
+				—
+			{% endif %}
+		</td>
+
+        <td>
+            {% if transaction.status == 'CANCELLED' %}
+                <span class="status cancelled-status">Cancelled</span>
+            {% else %}
+                <span class="status completed">Completed</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="8" style="text-align: center;">
+            No transactions to display yet.
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+    </table>
+
+</div>
+
+{% endblock %}

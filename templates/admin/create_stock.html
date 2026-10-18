@@ -1,0 +1,149 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Create Stock | Athena Admin{% endblock %}
+
+{% macro field(name, label, placeholder, type="text", attrs="") %}
+<div class="form-group {{ 'has-error' if errors.get(name) }}">
+    <label for="{{ name }}">{{ label }}</label>
+    <input type="{{ type }}" id="{{ name }}" name="{{ name }}"
+           value="{{ form.get(name, '') }}" placeholder="{{ placeholder }}"
+           {{ attrs | safe }} required
+           {% if errors.get(name) %}aria-invalid="true" aria-describedby="{{ name }}-error"{% endif %}>
+    {% if errors.get(name) %}
+    <p class="field-error" id="{{ name }}-error">{{ errors[name] }}</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h2>Stock Listings</h2>
+    <p>Add a company to the market and manage what's available to trade. ✦</p>
+</section>
+
+<form class="trade-layout" method="post" action="{{ url_for('admin.stocks') }}" data-create-stock novalidate>
+
+    <section class="card trade-card">
+        <h3>Create Stock</h3>
+
+        <div class="form-row">
+            {{ field("ticker_symbol", "Ticker symbol", "META",
+                     attrs='maxlength="5" autocomplete="off" autocapitalize="characters" class="ticker-input"') }}
+            {{ field("company_name", "Company name", "e.g. Meta Platforms Inc.", attrs='maxlength="255"') }}
+        </div>
+
+        <div class="form-row">
+            {{ field("initial_price", "Initial price ($)", "0.00", type="number",
+                     attrs='min="0.01" step="0.01" inputmode="decimal"') }}
+            {{ field("volume_available", "Shares available (volume)", "e.g. 1000000", type="number",
+                     attrs='min="1" step="1" inputmode="numeric"') }}
+        </div>
+
+        <button type="submit" class="primary-button">Create Listing</button>
+    </section>
+
+    <aside class="card summary-card">
+        <h3>Listing Preview</h3>
+
+        <dl class="summary-list">
+            <div><dt>Ticker</dt><dd data-preview="ticker">—</dd></div>
+            <div><dt>Company</dt><dd data-preview="company">—</dd></div>
+            <div><dt>Opening price</dt><dd data-preview="price">—</dd></div>
+            <div><dt>Shares available</dt><dd data-preview="volume">—</dd></div>
+            <div class="summary-total"><dt>Market cap</dt><dd data-preview="cap">$0.00</dd></div>
+        </dl>
+
+        <p class="hint">
+            New listings go live right away. The price generator starts moving the
+            price on its next tick while the market is open.
+        </p>
+    </aside>
+
+</form>
+
+<section class="portfolio-section">
+
+    <div class="section-heading">
+        <div>
+            <h3>Current Listings</h3>
+            <p>{{ listings | length }} stock{{ '' if listings | length == 1 else 's' }} on the market, newest first.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Company</th>
+                    <th>Current Price</th>
+                    <th>Volume</th>
+                    <th>Market Cap</th>
+                    <th>Listed</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in listings %}
+                <tr>
+                    <td><strong>{{ s.ticker_symbol }}</strong></td>
+                    <td>{{ s.company_name }}</td>
+                    <td class="stock-price">{{ s.current_price | usd }}</td>
+                    <td>{{ '{:,}'.format(s.volume_available) }}</td>
+                    <td>{{ (s.current_price * s.volume_available) | compact_usd }}</td>
+                    <td>
+                        {{ s.created_at | et("%b %-d, %Y") }}
+                        {% if s.created_by_name %}<span class="muted-line">by {{ s.created_by_name }}</span>{% endif %}
+                    </td>
+                    <td><span class="stock-status {{ s.status }}">{{ s.status | capitalize }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="empty-row">No stocks listed yet. Create the first one above.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Live preview of the new listing, and uppercase the ticker as it's typed.
+(function () {
+    const form = document.querySelector("[data-create-stock]");
+    if (!form) return;
+
+    const get = (name) => form.querySelector(`[name="${name}"]`);
+    const set = (name, text) => (form.querySelector(`[data-preview="${name}"]`).textContent = text);
+    const usd = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const compact = (n) => {
+        for (const [size, suffix] of [[1e12, "T"], [1e9, "B"], [1e6, "M"]]) {
+            if (n >= size) return "$" + (n / size).toFixed(2) + suffix;
+        }
+        return usd(n);
+    };
+
+    function update() {
+        const ticker = get("ticker_symbol");
+        ticker.value = ticker.value.toUpperCase().replace(/[^A-Z]/g, "");
+
+        const price = parseFloat(get("initial_price").value) || 0;
+        const volume = parseInt(get("volume_available").value, 10) || 0;
+
+        set("ticker", ticker.value || "—");
+        set("company", get("company_name").value.trim() || "—");
+        set("price", price ? usd(price) : "—");
+        set("volume", volume ? volume.toLocaleString("en-US") : "—");
+        set("cap", compact(price * volume));
+    }
+
+    form.addEventListener("input", update);
+    update();
+})();
+</script>
+{% endblock %}
