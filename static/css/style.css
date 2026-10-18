@@ -1233,4 +1233,22 @@ nav a.admin-nav-link {
     .schedule-times {
         grid-column: 1 / -1;
     }
+nayah-buy-sell-random_generator
+}
+
+/* Manage Balance page (reuses the Trade page card, form and button styles) */
+.balance-actions { 
+   display: grid; 
+   grid-template-columns: 1fr 1fr; 
+   gap: 12px; 
+   margin-top: 6px; 
+}
+
+.balance-actions .primary-button { 
+   margin-top: 0; 
+}
+
+.balance-layout .summary-list .summary-total { 
+   padding-top: 0; 
+   border-top: none; 
 }

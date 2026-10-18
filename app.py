@@ -8,6 +8,7 @@ from flask import (
 
 from admin import admin_bp
 from auth import current_admin_id, current_user_id
+from banking import BankingError, deposit, withdraw, get_linked_accounts, money
 from db import get_db_connection
 from market import get_market_status, to_eastern
 from price_generator import start_price_generator
@@ -340,6 +341,36 @@ def cancel(order_id):
         flash(str(error), "error")
 
     return redirect(url_for("orders"))
+
+
+@app.route("/balance", methods=["GET", "POST"])
+def balance():
+    user_id = current_user_id()
+    if not user_id:
+        return login_required_redirect()
+
+    if request.method == "POST":
+        action = request.form.get("action")
+        account_id = request.form.get("linked_account_id", type=int)
+        amount = request.form.get("amount")
+        try:
+            if action == "deposit":
+                result = deposit(user_id, account_id, amount)
+                flash(f"Deposited {usd(result['amount'])}. New balance {usd(result['balance_after'])}.", "success")
+            elif action == "withdraw":
+                result = withdraw(user_id, account_id, amount)
+                flash(f"Withdrew {usd(result['amount'])}. New balance {usd(result['balance_after'])}.", "success")
+            else:
+                flash("Choose deposit or withdraw.", "error")
+        except BankingError as error:
+            flash(str(error), "error")
+        return redirect(url_for("balance"))
+
+    return render_template(
+        "manage_balance.html",
+        cash=get_cash_balance(user_id),
+        accounts=get_linked_accounts(user_id),
+    )
 
 
 @app.route("/api/stocks")
