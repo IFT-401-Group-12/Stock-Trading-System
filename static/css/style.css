@@ -1221,3 +1221,20 @@ nav a.admin-nav-link {
         grid-column: 1 / -1;
     }
 }
+
+/* Manage Balance page (reuses the Trade page card, form and button styles) */
+.balance-actions { 
+   display: grid; 
+   grid-template-columns: 1fr 1fr; 
+   gap: 12px; 
+   margin-top: 6px; 
+}
+
+.balance-actions .primary-button { 
+   margin-top: 0; 
+}
+
+.balance-layout .summary-list .summary-total { 
+   padding-top: 0; 
+   border-top: none; 
+}
