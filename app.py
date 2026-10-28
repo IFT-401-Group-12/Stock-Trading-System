@@ -21,7 +21,12 @@ from trading import (
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-only-change-me")
+secret_key = os.getenv("FLASK_SECRET_KEY") #tlboyd3 added to remove the default secret key. Now a missing key stops the app at startup instead of using a key anyone can read in the repo.
+if not secret_key:
+    raise RuntimeError(
+        "FLASK_SECRET_KEY is not set. Add it to .env before starting the app."
+    )
+app.secret_key = secret_key
 app.register_blueprint(admin_bp)
 
 
