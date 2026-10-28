@@ -1,10 +1,9 @@
 """Who is using the app right now: the logged-in customer and whether they are an admin.
 
-Login should set session["user_id"] after checking the password. Until login
-is wired up, set DEV_USER_ID in .env to test as that user.
+Login and signup set session["user_id"] after checking the password. -tlboyd3 updated
 """
 
-import os
+from flask import session #tlboyd3 import os replaced because it's no longer used.
 
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
