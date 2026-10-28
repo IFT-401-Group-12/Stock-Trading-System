@@ -31,7 +31,11 @@
 			{% if is_admin %}
             <a href="{{ url_for('admin.stocks') }}" class="admin-nav-link">Admin</a>
             {% endif %}
-			<a href="{{ url_for('login') }}" class="login-nav-button">Log In</a>
+			{% if session.user_id %}
+            <a href="{{ url_for('logout') }}" class="login-nav-button">Log Out</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="login-nav-button">Log In</a>
+            {% endif %}
             {% endblock %}
         </nav>
     </header>

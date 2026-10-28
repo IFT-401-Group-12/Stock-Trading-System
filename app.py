@@ -7,7 +7,7 @@ from flask import (
 )
 
 from admin import admin_bp
-from auth import current_admin_id, current_user_id
+from auth import AuthError, create_user, current_admin_id, current_user_id, verify_login
 from banking import BankingError, deposit, withdraw, get_linked_accounts, money
 from db import get_db_connection
 from market import get_market_status, to_eastern
@@ -21,7 +21,12 @@ from trading import (
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-only-change-me")
+secret_key = os.getenv("FLASK_SECRET_KEY") #tlboyd3 added to remove the default secret key. Now a missing key stops the app at startup instead of using a key anyone can read in the repo.
+if not secret_key:
+    raise RuntimeError(
+        "FLASK_SECRET_KEY is not set. Add it to .env before starting the app."
+    )
+app.secret_key = secret_key
 app.register_blueprint(admin_bp)
 
 
@@ -219,14 +224,58 @@ def transactions():
         transactions=transactions
     )
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user_id():
+        return redirect(url_for("customer_dashboard"))
+
+    if request.method == "POST":
+        try:
+            user_id = verify_login(
+                request.form.get("username"),
+                request.form.get("password"),
+            )
+            session.clear() #tlboyd3 added to ensure login starts from a blank session, so nothing stored before the login carries into the logged-in account.
+            session["user_id"] = user_id
+            flash("Welcome back!", "success")
+            return redirect(url_for("customer_dashboard"))
+        except AuthError as error:
+            flash(str(error), "error")
+            return redirect(url_for("login"))
+
     return render_template("login.html")
 
 
-@app.route("/signup")
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
+    if current_user_id():
+        return redirect(url_for("customer_dashboard"))
+
+    if request.method == "POST":
+        try:
+            user_id = create_user(
+                request.form.get("first_name"),
+                request.form.get("last_name"),
+                request.form.get("username"),
+                request.form.get("email"),
+                request.form.get("password"),
+                request.form.get("confirm_password"),
+            )
+            session["user_id"] = user_id
+            flash("Your account is ready. Welcome to Athena Trading!", "success")
+            return redirect(url_for("customer_dashboard"))
+        except AuthError as error:
+            flash(str(error), "error")
+            return redirect(url_for("signup"))
+
     return render_template("signup.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You've been logged out.", "success")
+    return redirect(url_for("login"))
 
 
 # ---------------------------------------------------------------------------
