@@ -3,7 +3,7 @@
 Login and signup set session["user_id"] after checking the password. -tlboyd3 updated
 """
 
-from flask import session #tlboyd3 import os replaced because it's no longer used.
+#tlboyd3 import os removed because it's no longer used.
 
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
