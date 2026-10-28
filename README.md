@@ -31,7 +31,7 @@ creates the first admin and the Mon–Fri 9:30–4:00 schedule), or set
 | `static/js/live_prices.js` | Refreshes prices on the Stocks/Buy/Sell pages every 5 seconds. |
 
 **Who is logged in:** pages use `session["user_id"]`, which login and signup set
-after checking the password. Every customer and admin page requires a real login. -tlboyd3 updated
+after checking the password. Every customer and admin page requires a real login.
 
 **What a pending limit order holds:** a pending buy sets aside its cash (limit
 price × shares) and the shares from `stocks.volume_available`; a pending sell sets
