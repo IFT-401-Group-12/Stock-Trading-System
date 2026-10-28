@@ -4,6 +4,9 @@ from datetime import datetime
 from decimal import Decimal
 from unittest.mock import patch
 
+import os
+os.environ.setdefault("FLASK_SECRET_KEY", "test-secret") #tlboyd3 added .env so secret key tests pass.
+
 from app import app
 
 
