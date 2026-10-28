@@ -235,6 +235,7 @@ def login():
                 request.form.get("username"),
                 request.form.get("password"),
             )
+            session.clear() #tlboyd3 added to ensure login starts from a blank session, so nothing stored before the login carries into the logged-in account.
             session["user_id"] = user_id
             flash("Welcome back!", "success")
             return redirect(url_for("customer_dashboard"))
