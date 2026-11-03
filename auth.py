@@ -53,7 +53,12 @@ def create_user(first_name, last_name, username, email, password, confirm_passwo
         raise AuthError("The passwords don't match.")
     if len(password) < 8:
         raise AuthError("Your password must be at least 8 characters.")
-
+    if len(first_name) > 50 or len(last_name) > 50:
+        raise AuthError("Name is too long.")
+    if len(username) > 30:
+        raise AuthError("Username must be 30 characters or fewer.")
+    if len(email) > 255:
+        raise AuthError("Email is too long.")
     password_hash = generate_password_hash(password)
 
     connection = get_db_connection()
