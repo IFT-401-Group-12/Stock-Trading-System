@@ -3,6 +3,9 @@ import unittest
 from decimal import Decimal
 from unittest.mock import MagicMock, patch
 
+import os
+os.environ.setdefault("FLASK_SECRET_KEY", "test-secret") #tlboyd3 added .env so tests pass.
+
 from app import app
 
 
