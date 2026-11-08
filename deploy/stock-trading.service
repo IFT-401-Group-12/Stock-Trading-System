@@ -1,0 +1,15 @@
+[Unit]
+Description=Stock Trading System (Flask app served by gunicorn)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/Stock-Trading-System
+ExecStart=/home/ec2-user/Stock-Trading-System/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - app:app
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
