@@ -27,6 +27,17 @@ if not secret_key:
         "FLASK_SECRET_KEY is not set. Add it to .env before starting the app."
     )
 app.secret_key = secret_key
+
+# Session cookie hardening (Configure Production Application Settings).
+# HttpOnly: page scripts can't read the login cookie. SameSite=Lax: the browser
+# won't send it on cross-site form posts. Secure: only sent over HTTPS - turned
+# on in production with SESSION_COOKIE_SECURE=1 in .env (the site is served over
+# HTTPS through CloudFront). Left off by default so local http:// testing works.
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE") == "1",
+)
 app.register_blueprint(admin_bp)
 
 
