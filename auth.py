@@ -69,8 +69,27 @@ def create_user(first_name, last_name, username, email, password, confirm_passwo
             "VALUES (%s, %s, %s, %s, %s)",
             (first_name, last_name, username, email, password_hash),
         )
+
+        # Get the ID of the newly registered customer.
+        user_id = cursor.lastrowid
+
+        # Automatically link a fictional demo bank account.
+        cursor.execute(
+            "INSERT INTO linked_accounts "
+            "(user_id, bank_name, account_nickname, account_identifier) "
+            "VALUES (%s, %s, %s, %s)",
+            (
+                user_id,
+                "Athena Demo Bank",
+                "Demo Checking",
+                "DEMO-CHECKING",
+            ),
+        )
+
+        # Save both records together.
         connection.commit()
-        return cursor.lastrowid
+        return user_id
+
     except Exception as error:
         connection.rollback()
         # 1062 = duplicate entry on the UNIQUE username or email column.
