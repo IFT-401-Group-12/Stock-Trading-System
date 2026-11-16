@@ -65,9 +65,10 @@ def create_user(first_name, last_name, username, email, password, confirm_passwo
     cursor = connection.cursor()
     try:
         cursor.execute(
-            "INSERT INTO users (first_name, last_name, username, email, password_hash) "
-            "VALUES (%s, %s, %s, %s, %s)",
-            (first_name, last_name, username, email, password_hash),
+            "INSERT INTO users "
+            "(first_name, last_name, username, email, password_hash, cash_balance) "
+            "VALUES (%s, %s, %s, %s, %s, %s)",
+            (first_name, last_name, username, email, password_hash, "10000.00"),
         )
 
         # Get the ID of the newly registered customer.
