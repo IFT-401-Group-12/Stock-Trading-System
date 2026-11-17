@@ -27,31 +27,33 @@ WHERE NOT EXISTS (
 );
 
 -- Step 2: starting balance for users with no transactions yet.
-CREATE TEMPORARY TABLE backfill_starting_balance AS
+-- Balance first, then the matching DEPOSIT row. Both steps pick the same
+-- users (no transactions yet), so the order keeps them in sync.
+-- (Written without a temporary table: the app's DB user can't create one.)
+UPDATE users u
+SET u.cash_balance = u.cash_balance + 10000.00
+WHERE NOT EXISTS (
+    SELECT 1 FROM transactions t WHERE t.user_id = u.user_id
+);
+
+SELECT ROW_COUNT() AS users_given_starting_balance;
+
+INSERT INTO transactions (user_id, transaction_type, total_amount, linked_account_id, balance_after)
 SELECT u.user_id,
+       'DEPOSIT',
+       10000.00,
        (SELECT MIN(la.linked_account_id)
           FROM linked_accounts la
-         WHERE la.user_id = u.user_id) AS linked_account_id,
-       u.cash_balance + 10000.00 AS new_balance
+         WHERE la.user_id = u.user_id),
+       u.cash_balance
 FROM users u
 WHERE NOT EXISTS (
     SELECT 1 FROM transactions t WHERE t.user_id = u.user_id
 );
 
-INSERT INTO transactions (user_id, transaction_type, total_amount, linked_account_id, balance_after)
-SELECT user_id, 'DEPOSIT', 10000.00, linked_account_id, new_balance
-FROM backfill_starting_balance;
-
-UPDATE users u
-JOIN backfill_starting_balance b ON b.user_id = u.user_id
-SET u.cash_balance = b.new_balance;
-
--- Show what changed before it is committed.
-SELECT COUNT(*) AS users_given_starting_balance FROM backfill_starting_balance;
+-- Should be 0.
 SELECT COUNT(*) AS users_without_linked_account
 FROM users u
 WHERE NOT EXISTS (SELECT 1 FROM linked_accounts la WHERE la.user_id = u.user_id);
-
-DROP TEMPORARY TABLE backfill_starting_balance;
 
 COMMIT;
