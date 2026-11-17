@@ -4,7 +4,7 @@ Login and signup set session["user_id"] after checking the password. -tlboyd3 up
 """
 
 #tlboyd3 import os removed because it's no longer used.
-
+from decimal import Decimal
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -35,6 +35,14 @@ def current_admin_id():
     finally:
         cursor.close()
         connection.close()
+
+# Every new customer starts with virtual cash and a fictional linked bank account so they can trade, deposit and withdraw right away.
+STARTING_BALANCE = Decimal("10000.00")
+DEMO_BANK_NAME = "Athena Demo Bank"
+DEMO_ACCOUNT_NICKNAME = "Demo Checking"
+
+# linked_accounts.account_identifier stores a masked value only
+DEMO_ACCOUNT_IDENTIFIER = "****0000"
 
 class AuthError(Exception):
     """A login or signup problem. The message is safe to show the user."""
@@ -68,7 +76,7 @@ def create_user(first_name, last_name, username, email, password, confirm_passwo
             "INSERT INTO users "
             "(first_name, last_name, username, email, password_hash, cash_balance) "
             "VALUES (%s, %s, %s, %s, %s, %s)",
-            (first_name, last_name, username, email, password_hash, "10000.00"),
+            (first_name, last_name, username, email, password_hash, STARTING_BALANCE),
         )
 
         # Get the ID of the newly registered customer.
@@ -79,15 +87,19 @@ def create_user(first_name, last_name, username, email, password, confirm_passwo
             "INSERT INTO linked_accounts "
             "(user_id, bank_name, account_nickname, account_identifier) "
             "VALUES (%s, %s, %s, %s)",
-            (
-                user_id,
-                "Athena Demo Bank",
-                "Demo Checking",
-                "DEMO-CHECKING",
-            ),
+            (user_id, DEMO_BANK_NAME, DEMO_ACCOUNT_NICKNAME, DEMO_ACCOUNT_IDENTIFIER),
+        )
+        linked_account_id = cursor.lastrowid
+
+        # Record the starting balance as an opening deposit from the demo bank, so Transaction History shows where the money came from and balance_after lines up with later transactions.
+        cursor.execute(
+            "INSERT INTO transactions "
+            "(user_id, transaction_type, total_amount, linked_account_id, balance_after) "
+            "VALUES (%s, %s, %s, %s, %s)",
+            (user_id, "DEPOSIT", STARTING_BALANCE, linked_account_id, STARTING_BALANCE),
         )
 
-        # Save both records together.
+        # Save the customer, bank account and opening deposit together.
         connection.commit()
         return user_id
 
